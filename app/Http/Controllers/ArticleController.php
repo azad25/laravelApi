@@ -9,6 +9,9 @@ use App\Http\Resources\Article as ArticleResource;
 
 class ArticleController extends Controller
 {
+    public $msg = [
+        'ok' => '1'
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -39,7 +42,15 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $article = $request->IsMethod('put') ? Article::findOrFaild($request->article_id) : new Article;
+
+        $article->id = $request->input('article_id');
+        $article->title = $request->input('title');
+        $article->body = $request->input('body');
+
+        if($article->save()){
+            return $this->msg;
+        }
     }
 
     /**
@@ -48,9 +59,11 @@ class ArticleController extends Controller
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function show(Article $article)
+    public function show($id)
     {
-        //
+        $articleToShow = Article::findOrFail($id);
+
+        return new ArticleResource($articleToShow);
     }
 
     /**
@@ -82,8 +95,12 @@ class ArticleController extends Controller
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $article)
+    public function destroy($id)
     {
-        //
+        $article = Article::findOrFail($id);
+
+        if($article->delete()){
+            return $this->msg;
+        }
     }
 }

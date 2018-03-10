@@ -17,9 +17,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//List
 Route::get('articles', 'ArticleController@index');
-Route::get('articles/{id}', 'ArticleController@show');
-Route::post('article', 'ArticleController@index');
-Route::put('article', 'ArticleController@store');
-Route::put('article/{id}', 'ArticleController@edit');
-Route::delete('articles/{id}', 'ArticleController@destroy');
+
+//Get one
+Route::get('article/{id}', 'ArticleController@show');
+
+//Create new
+Route::post('article', 'ArticleController@store');
+
+//Edit id
+Route::put('article/{id}', 'ArticleController@store');
+
+//Delete id
+Route::delete('article/{id}', 'ArticleController@destroy');

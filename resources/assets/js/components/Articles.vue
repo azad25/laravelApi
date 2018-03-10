@@ -17,9 +17,23 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ article.title }}</h5>
                     <p class="card-text">{{ article.body }}</p>
+                    <hr>
+                    <button @click="deleteArticle(article.id)" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                    <button @click="editArticle(article.id)" class="btn btn-success"><i class="fas fa-edit"></i></button>
                 </div>
             </div>
         </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
+                    <a class="page-link" href="#" tabindex="-1" @click="fetchArticles(pagination.prev_page_url)">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="">Page {{ pagination.current_page }} of {{ pagination.last_page }}</a></li>
+                <li v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
+                    <a class="page-link" href="#" tabindex="-1" @click="fetchArticles(pagination.next_page_url)">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 
@@ -64,6 +78,21 @@ export default {
         }
 
         this.pagination = pagination;
+    },
+    deleteArticle(id){
+        if(confirm('Are you Sure?')){
+            fetch(`api/article/${id}`, {
+                method: 'delete'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.ok == 1){
+                    alert('Article removed');
+                    this.fetchArticles();
+                }
+            })
+            .catch(err=> console.log(err));
+        }
     }
   }
 }
